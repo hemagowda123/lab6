@@ -1,0 +1,46 @@
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;Canvas Example&lt;/title&gt;
+    &lt;style&gt;
+        canvas {
+            border: 1px solid black;
+            }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;header&gt;
+        &lt;h1&gt;Canvas Example&lt;/h1&gt;
+        &lt;p&gt;Draw on the canvas by clicking and dragging the mouse&lt;/p&gt;
+    &lt;/header&gt;
+    &lt;article&gt;
+        &lt;h2&gt;Canvas&lt;/h2&gt;
+        &lt;canvas id=&quot;myCanvas&quot; width=&quot;400&quot; height=&quot;400&quot;
+        onmousedown=&quot;startDrawing(event)&quot; onmousemove=&quot;drawLine(event)&quot;
+        onmouseup=&quot;stopDrawing(event)&quot;&gt;&lt;/canvas&gt;
+    &lt;/article&gt;
+&lt;script&gt;
+    var canvas = document.getElementById(&quot;myCanvas&quot;);
+    var ctx = canvas.getContext(&quot;2d&quot;);
+    var isDrawing = false;
+    function startDrawing(event) {
+        isDrawing = true;
+        var x = event.clientX - canvas.offsetLeft;
+        var y = event.clientY - canvas.offsetTop;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+    }
+    function drawLine(event) {
+        if (isDrawing) {
+        var x = event.clientX - canvas.offsetLeft;
+        var y = event.clientY - canvas.offsetTop;
+        ctx.lineTo(x, y);
+        ctx.stroke();
+    }
+    }
+    function stopDrawing(event) {
+        isDrawing = false;
+    }
+&lt;/script&gt;
+
+&lt;/body&gt;
