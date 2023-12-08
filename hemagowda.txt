@@ -1,0 +1,93 @@
+1. Write an html project ‘index.html’ and save it in any directory of your choice. Say the directory in your
+local system is ‘C:\Users\user\Desktop\Namrata_Das_PU\Fall_AY_2023-
+24\Subject_Handled\DevOps\pipeline’.
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;Canvas Example&lt;/title&gt;
+    &lt;style&gt;
+        canvas {
+            border: 1px solid black;
+            }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;header&gt;
+        &lt;h1&gt;Canvas Example&lt;/h1&gt;
+        &lt;p&gt;Draw on the canvas by clicking and dragging the mouse&lt;/p&gt;
+    &lt;/header&gt;
+    &lt;article&gt;
+        &lt;h2&gt;Canvas&lt;/h2&gt;
+        &lt;canvas id=&quot;myCanvas&quot; width=&quot;400&quot; height=&quot;400&quot;
+        onmousedown=&quot;startDrawing(event)&quot; onmousemove=&quot;drawLine(event)&quot;
+        onmouseup=&quot;stopDrawing(event)&quot;&gt;&lt;/canvas&gt;
+    &lt;/article&gt;
+&lt;script&gt;
+    var canvas = document.getElementById(&quot;myCanvas&quot;);
+    var ctx = canvas.getContext(&quot;2d&quot;);
+    var isDrawing = false;
+    function startDrawing(event) {
+        isDrawing = true;
+        var x = event.clientX - canvas.offsetLeft;
+        var y = event.clientY - canvas.offsetTop;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+    }
+    function drawLine(event) {
+        if (isDrawing) {
+        var x = event.clientX - canvas.offsetLeft;
+        var y = event.clientY - canvas.offsetTop;
+        ctx.lineTo(x, y);
+        ctx.stroke();
+    }
+    }
+    function stopDrawing(event) {
+        isDrawing = false;
+    }
+&lt;/script&gt;
+
+&lt;/body&gt;
+
+2. Download and install nginx server in your system and make all necessary configurations.
+3. Create a folder ‘htmldocs’ in your nginx filesystem. This will serve as the root directory for your nginx
+html project . Say the path to the root is ‘C:\Users\user\Desktop\Namrata_Das_PU\Fall_AY_2023-
+24\DevOps\installers\nginx-1.24.0\htmldocs’
+4. Create a jenkinsfile named ‘Jenkinsfile’ in the same project directory.
+
+pipeline {
+agent any
+environment {
+GIT_REPO_URL = &#39;https://github.com/namratasgit/pipeline1.git&#39;
+NGINX_PATH = &#39;C:\\Users\\user\\Desktop\\Namrata_Das_PU\\Fall_AY_2023-
+24\\DevOps\\installers\\nginx-1.24.0\\htmldocs&#39;
+}
+stages {
+stage(&#39;Checkout&#39;) {
+steps {
+script {
+// Use the checkout step to clone the Git repository
+checkout([$class: &#39;GitSCM&#39;, branches: [[name: &#39;*/master&#39;]],
+doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [],
+userRemoteConfigs: [[url: GIT_REPO_URL]]])
+}
+}
+}
+stage(&#39;Deploy to Nginx&#39;) {
+steps {
+script {
+// Using the Jenkins workspace variable to reference files
+bat &#39;xcopy /y &quot;C:\\Users\\user\\Desktop\\Namrata_Das_PU\\Fall_AY_2023-
+24\\Subject_Handled\\DevOps\\pipeline\\index.html&quot; &quot;%NGINX_PATH%&quot;&#39;
+}
+}
+}
+}
+post {
+success {
+echo &#39;Pipeline succeeded! You can add additional steps here.&#39;
+}
+failure {
+echo &#39;Pipeline failed! You may want to take some actions.&#39;
+}
+}
+}
